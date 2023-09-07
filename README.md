@@ -12,5 +12,6 @@
 
 ## Задание
 
-- Провести рефакторинг кода «Книга контактов» из репозитория `react-phonebook`,
+- Провести рефакторинг кода «Книга контактов» из репозитория
+  [react-phonebook](https://github.com/YevhenChementsov/react-phonebook),
   используя React-хуки.

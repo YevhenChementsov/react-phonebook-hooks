@@ -12,5 +12,6 @@
 
 ## Assignments:
 
-- Refactor the "Contact Book" code from the `react-phonebook` repository using
-  React-hooks.
+- Refactor the "Contact Book" code from the
+  [react-phonebook](https://github.com/YevhenChementsov/react-phonebook)
+  repository using React-hooks.
