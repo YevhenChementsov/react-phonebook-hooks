@@ -1,4 +1,4 @@
-import { IconButton } from '@/components';
+import { IconButton } from '@/components/IconButton/IconButton';
 import styled from 'styled-components';
 
 export const Label = styled.label`
@@ -55,7 +55,7 @@ export const SortButton = styled(IconButton)`
   }
 `;
 
-export const SerchBox = styled.div`
+export const SearchBox = styled.div`
   position: absolute;
   top: 0;
   left: 0;

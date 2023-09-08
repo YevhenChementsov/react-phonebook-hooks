@@ -1,4 +1,4 @@
-import { IconButton } from '@/components';
+import { IconButton } from '@/components/IconButton/IconButton';
 import styled from 'styled-components';
 
 export const Name = styled.p`

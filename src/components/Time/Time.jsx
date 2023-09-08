@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Clock } from './Time.styled';
 
-const Time = () => {
+export const Time = () => {
   const [time, setTime] = useState(() => new Date());
 
   const timeID = useRef(null);
@@ -15,5 +15,3 @@ const Time = () => {
 
   return <Clock>{time.toLocaleTimeString([], { timeStyle: 'short' })}</Clock>;
 };
-
-export default Time;

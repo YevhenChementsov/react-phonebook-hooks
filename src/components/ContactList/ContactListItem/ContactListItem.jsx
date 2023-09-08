@@ -1,3 +1,4 @@
+// import { ReactComponent as DeleteIcon } from '@/icons/bin.svg';
 import { ReactComponent as DeleteIcon } from '@/icons/bin.svg';
 import PropTypes from 'prop-types';
 import { ContactListButton, Name, PhoneNumber } from './ContactListItem.styled';

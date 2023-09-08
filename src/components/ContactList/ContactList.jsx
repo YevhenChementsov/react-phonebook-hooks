@@ -1,4 +1,4 @@
-import { ContactListItem } from '@/components';
+import { ContactListItem } from '@/components/ContactList/ContactListItem/ContactListItem';
 import PropTypes from 'prop-types';
 import { Item } from './ContactList.styled';
 

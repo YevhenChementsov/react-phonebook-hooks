@@ -1,14 +1,7 @@
-// import { Form, Formik } from 'formik';
-// import PropTypes from 'prop-types';
-// import { v4 as uuidv4 } from 'uuid';
-// import * as Yup from 'yup';
-// import { SubmitFormButton } from './ContactAddForm.styled';
+import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
+import { Input, InputName, SubmitFormButton } from './ContactAddForm.styled';
 // import { ContactFormInput } from './ContactFormInput/ContactFormInput';
-
-// const initialValues = {
-//   name: '',
-//   number: '',
-// };
 
 // const contactAddValidationSchema = Yup.object().shape({
 //   name: Yup.string()
@@ -31,46 +24,30 @@
 //     .required(),
 // });
 
-// export const ContactAddForm = ({ onSubmit }) => {
-//   const nameInputId = uuidv4();
-//   const numberInputId = uuidv4();
+export const ContactAddForm = ({ onSubmit }) => {
+  const nameInputId = uuidv4();
+  const numberInputId = uuidv4();
 
-//   const handleAddContact = async (values, { resetForm, setSubmitting }) => {
-//     try {
-//       await onSubmit(values);
-//       resetForm();
-//     } catch (error) {
-//       console.log(error);
-//     } finally {
-//       setSubmitting(false);
-//     }
-//   };
+  const handleAddContact = values => {
+    onSubmit(values);
+  };
 
-//   return (
-//     <Formik
-//       initialValues={initialValues}
-//       validationSchema={contactAddValidationSchema}
-//       onSubmit={handleAddContact}
-//     >
-//       <Form autoComplete="off">
-//         <ContactFormInput
-//           label="Name"
-//           name="name"
-//           id={nameInputId}
-//           type="text"
-//         />
-//         <ContactFormInput
-//           label="Number"
-//           name="number"
-//           id={numberInputId}
-//           type="tel"
-//         />
-//         <SubmitFormButton type="submit">Add contact</SubmitFormButton>
-//       </Form>
-//     </Formik>
-//   );
-// };
+  return (
+    <form autoComplete="off" onSubmit={handleAddContact}>
+      <label htmlFor={nameInputId}>
+        <InputName>Name</InputName>
+        <Input type="text" name="name" id={nameInputId} required />
+      </label>
+      <label htmlFor={numberInputId}>
+        <InputName>Number</InputName>
+        <Input type="tel" name="number" id={numberInputId} required />
+      </label>
 
-// ContactAddForm.propTypes = {
-//   onSubmit: PropTypes.func.isRequired,
-// };
+      <SubmitFormButton type="submit">Add contact</SubmitFormButton>
+    </form>
+  );
+};
+
+ContactAddForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

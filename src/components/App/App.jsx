@@ -1,6 +1,10 @@
 import { Component } from 'react';
 
-import { ContactList, IconsWrapper, SearchFilter, Time } from '@/components';
+import { ContactAddForm } from '@/components/ContactAddForm/ContactAddForm';
+import { ContactList } from '@/components/ContactList/ContactList';
+import { IconsWrapper } from '@/components/IconWrapper/IconsWrapper';
+import { SearchFilter } from '@/components/SearchFilter/SearchFilter';
+import { Time } from '@/components/Time/Time';
 import { ReactComponent as Close } from '@/icons/reply.svg';
 import { ReactComponent as Open } from '@/icons/user-plus.svg';
 import { ToastContainer, toast } from 'react-toastify';
@@ -118,7 +122,8 @@ export default class App extends Component {
 
   render() {
     const { filter, visible, contacts } = this.state;
-    const { changeFilter, deleteContact, sortContacts, toggle } = this;
+    const { addContact, changeFilter, deleteContact, sortContacts, toggle } =
+      this;
     const filteredContacts = this.getFilteredContacts();
 
     return (
@@ -140,9 +145,7 @@ export default class App extends Component {
         </Header>
         <Main>
           {visible ? (
-            {
-              /* <ContactAddForm onSubmit={addContact} /> */
-            }
+            <ContactAddForm onSubmit={addContact} />
           ) : (
             <ContactList
               contacts={filteredContacts}
