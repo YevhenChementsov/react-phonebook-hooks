@@ -1,31 +1,19 @@
-import { Component } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Clock } from './Time.styled';
 
-export class Time extends Component {
-  state = {
-    date: new Date(),
-  };
+const Time = () => {
+  const [time, setTime] = useState(() => new Date());
 
-  componentDidMount() {
-    this.timeID = setInterval(() => this.tick(), 1000);
-  }
+  const timeID = useRef(null);
 
-  componentWillUnmount() {
-    clearInterval(this.timeID);
-  }
+  useEffect(() => {
+    timeID.current = setInterval(() => setTime(new Date()), 1000);
 
-  tick() {
-    this.setState({
-      date: new Date(),
-    });
-  }
+    return () => clearInterval(timeID);
+  }, []);
 
-  render() {
-    return (
-      <Clock>
-        {this.state.date.toLocaleTimeString([], { timeStyle: 'short' })}
-      </Clock>
-    );
-  }
-}
+  return <Clock>{time.toLocaleTimeString([], { timeStyle: 'short' })}</Clock>;
+};
+
+export default Time;
