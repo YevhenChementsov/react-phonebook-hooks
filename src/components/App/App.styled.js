@@ -31,10 +31,6 @@ export const Header = styled.header`
   justify-content: space-between;
 `;
 
-export const Main = styled.main`
-  /* overflow: auto; */
-`;
-
 export const Footer = styled.footer`
   display: flex;
   justify-content: center;

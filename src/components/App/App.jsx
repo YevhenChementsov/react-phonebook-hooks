@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ContactAddForm } from '@/components/ContactAddForm/ContactAddForm';
 import { ContactList } from '@/components/ContactList/ContactList';
@@ -14,87 +14,34 @@ import {
   Container,
   Footer,
   Header,
-  Main,
   Title,
   Wrapper,
 } from './App.styled';
-export default class App extends Component {
-  state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-    visible: false,
-  };
 
-  componentDidMount() {
-    const storageContactList = JSON.parse(localStorage.getItem('contactList'));
+const App = () => {
+  const [contacts, setContacts] = useState(
+    () =>
+      JSON.parse(window.localStorage.getItem('contactList')) || [
+        { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+        { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+        { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+        { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+      ],
+  );
+  const [filter, setFilter] = useState('');
+  const [visible, setVisible] = useState(false);
 
-    if (storageContactList) {
-      this.setState({ contacts: storageContactList });
+  useEffect(() => {
+    window.localStorage.setItem('contactList', JSON.stringify(contacts));
+
+    if (contacts.length >= 9) {
+      const message = 'Your memory is full. Please, delete some contacts!';
+      const typeOfMessage = 'error';
+      showNotification(typeOfMessage, message);
     }
-  }
+  }, [contacts]);
 
-  componentDidUpdate(_, prevState) {
-    const newContacts = this.state.contacts;
-    const prevContacts = prevState.contacts;
-
-    if (newContacts !== prevContacts) {
-      localStorage.setItem('contactList', JSON.stringify(newContacts));
-    }
-
-    if (newContacts.length > prevContacts.length && prevContacts.length !== 0) {
-      this.toggle();
-
-      if (newContacts.length >= 9) {
-        const message = 'Your memory is full. Please, delete some contacts!';
-        const typeOfMessage = 'error';
-
-        this.showNotification(typeOfMessage, message);
-      }
-    }
-  }
-
-  addContact = ({ name, number }) => {
-    const contact = {
-      id: uuidv4(),
-      name,
-      number,
-    };
-
-    this.setState(({ contacts }) => {
-      const message = `${contact.name} is already in contacts.`;
-      const typeOfMessage = 'warn';
-
-      return contacts.some(contact => contact.name.includes(name))
-        ? this.showNotification(typeOfMessage, message)
-        : { contacts: [contact, ...contacts] };
-    });
-  };
-
-  changeFilter = e => {
-    this.setState({ filter: e.currentTarget.value });
-  };
-
-  deleteContact = id => {
-    this.setState(({ contacts }) => ({
-      contacts: contacts.filter(contact => contact.id !== id),
-    }));
-  };
-
-  getFilteredContacts = () => {
-    const { contacts, filter } = this.state;
-    const lowerCaseFilter = filter.toLowerCase();
-
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(lowerCaseFilter),
-    );
-  };
-
-  showNotification = (type, message) =>
+  const showNotification = (type, message) =>
     toast[type](message, {
       position: 'top-center',
       autoClose: 3000,
@@ -106,64 +53,80 @@ export default class App extends Component {
       theme: 'colored',
     });
 
-  sortContacts = () => {
-    const { contacts } = this.state;
+  const addContact = ({ name, number }) => {
+    const contact = {
+      id: uuidv4(),
+      name,
+      number,
+    };
 
-    const sortedContacts = [...contacts].sort((a, b) =>
-      a.name.localeCompare(b.name),
+    const message = `${contact.name} is already in contacts.`;
+    const typeOfMessage = 'warn';
+    const alreadyExist = contacts.some(contact => contact.name.includes(name));
+
+    if (alreadyExist) return showNotification(typeOfMessage, message);
+
+    setContacts(state => [contact, ...state]);
+    toggle();
+  };
+
+  const changeFilter = e => setFilter(e.currentTarget.value);
+
+  const deleteContact = id =>
+    setContacts(state => state.filter(contact => contact.id !== id));
+
+  const getFilteredContacts = () => {
+    return [...contacts].filter(({ name }) =>
+      name.toLowerCase().includes(filter.toLowerCase()),
     );
-
-    this.setState({ contacts: sortedContacts });
   };
 
-  toggle = () => {
-    this.setState(prevState => ({ visible: !prevState.visible }));
-  };
+  const sortContacts = () =>
+    setContacts([...contacts].sort((a, b) => a.name.localeCompare(b.name)));
 
-  render() {
-    const { filter, visible, contacts } = this.state;
-    const { addContact, changeFilter, deleteContact, sortContacts, toggle } =
-      this;
-    const filteredContacts = this.getFilteredContacts();
+  const toggle = () => setVisible(!visible);
 
-    return (
-      <Container>
-        <h1 hidden>Phonebook App</h1>
-        <Header>
-          <Wrapper>
-            <Time />
-            <IconsWrapper />
-          </Wrapper>
-          <Title>Contacts</Title>
-          {!visible && (
-            <SearchFilter
-              value={filter}
-              onChangeFilter={changeFilter}
-              onSortContacts={sortContacts}
-            />
-          )}
-        </Header>
-        <Main>
+  const filteredContacts = getFilteredContacts();
+
+  return (
+    <Container>
+      <h1 hidden>Phonebook App</h1>
+      <Header>
+        <Wrapper>
+          <Time />
+          <IconsWrapper />
+        </Wrapper>
+        <Title>Contacts</Title>
+        {!visible && (
+          <SearchFilter
+            value={filter}
+            onChangeFilter={changeFilter}
+            onSortContacts={sortContacts}
+          />
+        )}
+      </Header>
+      <main>
+        {visible ? (
+          <ContactAddForm onSubmit={addContact} />
+        ) : (
+          <ContactList
+            contacts={filteredContacts}
+            onDeleteContact={deleteContact}
+          />
+        )}
+      </main>
+      <Footer>
+        <ButtonIcon onClick={toggle} disabled={contacts.length === 9}>
           {visible ? (
-            <ContactAddForm onSubmit={addContact} />
+            <Close width="24" height="24" />
           ) : (
-            <ContactList
-              contacts={filteredContacts}
-              onDeleteContact={deleteContact}
-            />
+            <Open width="24" height="24" />
           )}
-        </Main>
-        <Footer>
-          <ButtonIcon onClick={toggle} disabled={contacts.length === 9}>
-            {visible ? (
-              <Close width="24" height="24" />
-            ) : (
-              <Open width="24" height="24" />
-            )}
-          </ButtonIcon>
-        </Footer>
-        <ToastContainer />
-      </Container>
-    );
-  }
-}
+        </ButtonIcon>
+      </Footer>
+      <ToastContainer />
+    </Container>
+  );
+};
+
+export default App;
