@@ -27,6 +27,12 @@ export const Input = styled.input`
   }
 `;
 
+export const ErrorText = styled.p`
+  margin-top: 5px;
+  font-size: 14px;
+  color: ${props => props.theme.colors.red};
+`;
+
 export const SubmitFormButton = styled.button`
   display: flex;
   justify-content: center;
